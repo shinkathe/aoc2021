@@ -1,6 +1,6 @@
 let input = System.IO.File.ReadAllLines "day1.txt" |> Seq.map int
 
-let pairsWhereGt x = x |> Seq.pairwise |> Seq.map(fun (prev, curr) -> prev < curr) |> Seq.where ((=) true) |> Seq.length
+let pairsWhereGt x = x |> Seq.pairwise |> Seq.where(fun (prev, curr) -> prev < curr) |> Seq.length
 
 let answer1 = input |> pairsWhereGt
 printfn "%i" answer1 
