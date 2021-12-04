@@ -1,22 +1,39 @@
+let toCommand (line: string) =
+    line.Split ' '
+    |> fun command -> command.[0], int command.[1]
 
-let toTuple a = ( a |> Seq.item 0, a |> Seq.item 1 |> int )
-let input = System.IO.File.ReadAllLines "day2.txt" |> Seq.map (fun x -> x.Split " ") |> Seq.map toTuple
-let convertToInstructions x =
-    match x with
-    | ("up", up) -> fun (x, y) -> (x, y - up)
-    | ("down", down) -> fun (x, y) -> (x, y + down)
-    | ("forward", forward) -> fun (x, y) -> (x + forward, y)
-    | (_, _) -> fun (x, y) -> (x, y)
+let input =
+    System.IO.File.ReadAllLines "day2.txt"
+    |> Seq.map toCommand
 
-let convertToInstructionsAnswer2 x =
-    match x with
-    | ("up", up) -> fun (x,y,aim) -> (x, y, aim - up)
-    | ("down", down) -> fun (x,y,aim) -> (x, y, aim + down)
-    | ("forward", forward) -> fun (x,y,aim) -> (x + forward, y + aim * forward, aim)
-    | (_, _) -> fun (x,y,aim) -> (x,y,aim)
+let toInstruction1 instruction =
+    match instruction with
+    | ("up", up) -> fun (distance, depth) -> distance, depth - up
+    | ("down", down) -> fun (distance, depth) -> distance, depth + down
+    | (_, forward) -> fun (distance, depth) -> distance + forward, depth
 
-let answer1 = input |> Seq.map convertToInstructions |> Seq.fold (fun acc instruction -> instruction acc) (0,0) 
-printfn "%A" (answer1 |> fun (x, y) -> x * y)
+let toInstruction2 instruction =
+    match instruction with
+    | ("up", up) -> fun (distance, depth, aim) -> distance, depth, aim - up
+    | ("down", down) -> fun (distance, depth, aim) -> distance, depth, aim + down
+    | (_, forward) -> fun (distance, depth, aim) -> distance + forward, depth + aim * forward, aim
 
-let answer2 = input |> Seq.map convertToInstructionsAnswer2 |> Seq.fold (fun acc instruction -> instruction acc) (0, 0, 0)
-printfn "%A" (answer2 |> fun (x, y, _) -> x * y)
+let answer1 =
+    input
+    |> Seq.map toInstruction1
+    |> Seq.fold ((fun acc instruction -> instruction acc)) (0, 0)
+
+printfn
+    "%A"
+    (answer1
+     |> fun (distance, depth) -> distance * depth)
+
+let answer2 =
+    input
+    |> Seq.map toInstruction2
+    |> Seq.fold (fun acc instruction -> instruction acc) (0, 0, 0)
+
+printfn
+    "%A"
+    (answer2
+     |> fun (distance, depth, _) -> distance * depth)

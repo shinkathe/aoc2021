@@ -1,11 +1,20 @@
-let input = System.IO.File.ReadAllLines "day1.txt" |> Seq.map int
+let input =
+    System.IO.File.ReadAllLines "day1.txt"
+    |> Seq.map int
 
-let pairsWhereGt x = x |> Seq.pairwise |> Seq.where(fun (prev, curr) -> prev < curr) |> Seq.length
+let pairsWhereGt x =
+    x
+    |> Seq.pairwise
+    |> Seq.where (fun (prev, curr) -> prev < curr)
+    |> Seq.length
 
 let answer1 = input |> pairsWhereGt
-printfn "%i" answer1 
+printfn "%i" answer1
 
-let answer2 = input |> Seq.windowed 3 |> Seq.map Array.sum |> pairsWhereGt
-printfn "%i" answer2 
+let answer2 =
+    input
+    |> Seq.windowed 3
+    |> Seq.map Array.sum
+    |> pairsWhereGt
 
-
+printfn "%i" answer2
