@@ -7,16 +7,18 @@ let input =
     |> Seq.map toCommand
 
 let toInstruction1 instruction =
-    match instruction with
-    | ("up", up) -> fun (distance, depth) -> distance, depth - up
-    | ("down", down) -> fun (distance, depth) -> distance, depth + down
-    | (_, forward) -> fun (distance, depth) -> distance + forward, depth
+    fun (distance, depth) ->
+        match instruction with
+        | ("up", up) -> distance, depth - up
+        | ("down", down) -> distance, depth + down
+        | (_, forward) -> distance + forward, depth
 
 let toInstruction2 instruction =
-    match instruction with
-    | ("up", up) -> fun (distance, depth, aim) -> distance, depth, aim - up
-    | ("down", down) -> fun (distance, depth, aim) -> distance, depth, aim + down
-    | (_, forward) -> fun (distance, depth, aim) -> distance + forward, depth + aim * forward, aim
+    fun (distance, depth, aim) ->
+        match instruction with
+        | ("up", up) -> distance, depth, aim - up
+        | ("down", down) -> distance, depth, aim + down
+        | (_, forward) -> distance + forward, depth + aim * forward, aim
 
 let answer1 =
     input
