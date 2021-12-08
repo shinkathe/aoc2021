@@ -3,7 +3,6 @@ let log tx x =
     x
 
 let input =
-    // System.IO.File.ReadAllLines "./day4/day4.txt"
     System.IO.File.ReadAllLines "./day4/day4.txt"
     |> Seq.map (fun line -> line.Split ' ')
     |> Seq.map (id >> Seq.map int)
@@ -22,33 +21,33 @@ let boardsWithSelectionData =
         >> Seq.splitInto boardWidth
         >> Seq.map seq
     )
+    |> Seq.map (fun board -> board, (board |> Seq.transpose))
 
-let lowestAnswers =
-    id
-    >> Seq.minBy (id >> Seq.sumBy (snd))
-    >> Seq.maxBy snd
-    >> snd
+let winningDraw (a, b) =
+    Seq.concat [ a; b ]
+    |> Seq.map (id >> snd |> Seq.maxBy)
+    |> Seq.minBy (snd)
+    |> snd
 
-let winningBoard =
-    Seq.concat [ boardsWithSelectionData
-                 boardsWithSelectionData
-                 |> Seq.map (id >> Seq.transpose >> Seq.map seq) ]
-    |> Seq.sortBy lowestAnswers
-    |> Seq.head
+let boardsInOrderOfWinning =
+    boardsWithSelectionData
+    |> Seq.sortBy (winningDraw)
     |> log "test"
 
-let lowestDraw = winningBoard |> lowestAnswers
-
-let unmarked =
-    winningBoard
+let unmarkedSum board =
+    fst board
     |> Seq.concat
-    |> Seq.where (snd >> (<) lowestDraw)
-    |> Seq.sumBy fst
+    |> Seq.where (snd >> (<) (winningDraw board))
+    |> Seq.sumBy (fst)
 
-let lastCall =
-    winningBoard
-    |> Seq.concat
-    |> Seq.find (snd >> (=) lowestDraw)
-    |> fst
 
-printfn "%A" (unmarked * lastCall)
+let firstToWin = boardsInOrderOfWinning |> Seq.head
+let lastToWin = boardsInOrderOfWinning |> Seq.last
+
+let a1 =
+    Seq.item (winningDraw firstToWin) selections
+    * unmarkedSum firstToWin
+
+let a2 =
+    Seq.item (winningDraw lastToWin) selections
+    * unmarkedSum lastToWin
