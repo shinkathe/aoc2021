@@ -34,6 +34,7 @@ let input =
         |> Array.map int
         |> fun cd -> isWithin (cd.[0], cd.[1], cd.[2], cd.[3]))
 
+// Just to be clear, this is a terrible way to solve this - I'm doing it for fun :)
 let coords =
     ([| 0 .. 1000 |], [| 0 .. 1000 |])
     ||> Array.allPairs
