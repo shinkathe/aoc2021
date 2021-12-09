@@ -1,10 +1,6 @@
 let isHV x1 x2 y1 y2 = x1 = x2 || y1 = y2
 
-let isInHVLine (x1, y1, x2, y2) (x, y) =
-    x >= min x1 x2
-    && x <= max x1 x2
-    && y >= min y1 y2
-    && y <= max y1 y2
+let isInHVLine (x1, y1, x2, y2) (x, y) = x >= min x1 x2 && x <= max x1 x2 && y >= min y1 y2 && y <= max y1 y2
 
 let isWithin (x1, y1, x2, y2) (x, y) =
     match (isHV x1 x2 y1 y2) with
